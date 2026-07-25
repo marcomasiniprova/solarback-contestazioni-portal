@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Solarback — Portale Contestazioni</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="app">
+    <header class="header">
+      <div class="header-inner">
+        <div class="logo">
+          <span class="logo-icon">&#9728;</span>
+          <div class="logo-text">
+            <h1>SOLARBACK</h1>
+            <span class="logo-sub">Portale Contestazioni</span>
+          </div>
+        </div>
+        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </header>
+
+    <nav class="nav-tabs" id="navTabs">
+      <button class="nav-tab active" data-tab="form">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+        Nuova Contestazione
+      </button>
+      <button class="nav-tab" data-tab="dashboard">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+        Contestazioni Aperte
+        <span class="badge-counter" id="contestazioniCounter">0</span>
+      </button>
+    </nav>
+
+    <main class="main-content">
+      <section id="section-form" class="section active">
+        <div class="section-header">
+          <h2>Nuova Contestazione</h2>
+          <p>Compila il modulo per contestare un evento economico. Hai <strong>72 ore</strong> dall'evento.</p>
+        </div>
+        <form id="contestazioneForm" class="contestazione-form" novalidate>
+          <div class="form-card">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="partner">Partner *</label>
+                <select id="partner" required>
+                  <option value="">Seleziona partner</option>
+                  <option value="Rossi Impianti">Rossi Impianti</option>
+                  <option value="Bianchi Solar">Bianchi Solar</option>
+                  <option value="Verdi Energia">Verdi Energia</option>
+                  <option value="Neri Tech">Neri Tech</option>
+                  <option value="Gialli Solutions">Gialli Solutions</option>
+                  <option value="Altro">Altro</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="evento">Evento *</label>
+                <select id="evento" required>
+                  <option value="">Seleziona tipo</option>
+                  <option value="Sopralluogo">Sopralluogo</option>
+                  <option value="Verifica">Verifica</option>
+                  <option value="Collaudo">Collaudo</option>
+                  <option value="Altro">Altro</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="idSopralluogo">ID Sopralluogo *</label>
+                <input type="text" id="idSopralluogo" placeholder="es. SR-2026-0421" required>
+              </div>
+              <div class="form-group">
+                <label for="dataEvento">Data Evento *</label>
+                <input type="date" id="dataEvento" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="motivazione">Motivazione della Contestazione *</label>
+              <textarea id="motivazione" rows="5" placeholder="Descrivi in dettaglio i motivi della contestazione. Specifica perché ritieni che il sopralluogo non fosse valido..." required></textarea>
+              <span class="char-count"><span id="motivazioneCount">0</span>/2000</span>
+            </div>
+            <div class="form-group">
+              <label>Documentazione *</label>
+              <div class="upload-zone" id="uploadZone">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                <p>Trascina qui i file o <span class="upload-link">clicca per caricare</span></p>
+                <span class="upload-hint">PDF, JPG, PNG — Max 10MB ciascuno</span>
+                <input type="file" id="fileInput" multiple accept=".pdf,.jpg,.jpeg,.png" hidden>
+              </div>
+              <ul class="file-list" id="fileList"></ul>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn btn-ghost" id="resetBtn">Annulla</button>
+            <button type="submit" class="btn btn-primary">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2L15 22l-4-9-9-4z"/></svg>
+              Invia Contestazione
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <section id="section-dashboard" class="section">
+        <div class="section-header">
+          <h2>Contestazioni Aperte</h2>
+          <p>Gestisci e monitora lo stato delle contestazioni ricevute.</p>
+        </div>
+
+        <div class="stats-grid" id="statsGrid">
+          <div class="stat-card" data-stat="totale">
+            <span class="stat-value" id="statTotale">0</span>
+            <span class="stat-label">Totale</span>
+          </div>
+          <div class="stat-card" data-stat="ricevuta">
+            <span class="stat-value" id="statRicevuta">0</span>
+            <span class="stat-label">Ricevute</span>
+          </div>
+          <div class="stat-card" data-stat="in_valutazione">
+            <span class="stat-value" id="statValutazione">0</span>
+            <span class="stat-label">In Valutazione</span>
+          </div>
+          <div class="stat-card" data-stat="accolta">
+            <span class="stat-value" id="statAccolta">0</span>
+            <span class="stat-label">Accolte</span>
+          </div>
+          <div class="stat-card" data-stat="respinta">
+            <span class="stat-value" id="statRespinta">0</span>
+            <span class="stat-label">Respinte</span>
+          </div>
+        </div>
+
+        <div class="dashboard-filters">
+          <div class="filter-group">
+            <input type="text" id="filterSearch" placeholder="Cerca partner, ID sopralluogo...">
+          </div>
+          <div class="filter-group">
+            <select id="filterStato">
+              <option value="">Tutti gli stati</option>
+              <option value="ricevuta">Ricevuta</option>
+              <option value="in_valutazione">In Valutazione</option>
+              <option value="info_richieste">Info Richieste</option>
+              <option value="accolta">Accolta</option>
+              <option value="respinta">Respinta</option>
+              <option value="chiusa">Chiusa</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <select id="filterPartner">
+              <option value="">Tutti i partner</option>
+            </select>
+          </div>
+          <button class="btn btn-ghost btn-sm" id="resetFiltri">Reset filtri</button>
+        </div>
+
+        <div class="contestazioni-list" id="contestazioniList">
+          <div class="empty-state">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+            <h3>Nessuna contestazione</h3>
+            <p>Le contestazioni inviate appariranno qui.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div class="modal-overlay" id="detailModal">
+      <div class="modal">
+        <div class="modal-header">
+          <h3 id="modalTitle">Dettaglio Contestazione</h3>
+          <button class="modal-close" id="modalClose">&times;</button>
+        </div>
+        <div class="modal-body" id="modalBody"></div>
+      </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
